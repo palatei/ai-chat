@@ -1,0 +1,93 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 48px 24px 120px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.hero {
+  margin-bottom: 48px;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--jivo-green-muted);
+  color: var(--jivo-green);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0 0 24px;
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.features {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.mockContent {
+  opacity: 0.85;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.cardImage {
+  height: 120px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--bg-muted), var(--border));
+  margin-bottom: 12px;
+}
+
+.cardLine {
+  height: 10px;
+  border-radius: 4px;
+  background: var(--border);
+  margin-bottom: 8px;
+  width: 90%;
+}
+
+.cardLineShort {
+  height: 10px;
+  border-radius: 4px;
+  background: var(--border);
+  width: 55%;
+}

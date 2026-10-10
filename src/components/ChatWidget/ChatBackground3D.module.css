@@ -1,0 +1,29 @@
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.host {
+  width: 100%;
+  height: 100%;
+}
+
+.canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-muted) 72%, transparent) 0%,
+    color-mix(in srgb, var(--bg-muted) 88%, transparent) 55%,
+    color-mix(in srgb, var(--bg-muted) 94%, transparent) 100%
+  );
+}
