@@ -49,7 +49,7 @@ curl -s http://localhost:3001/api/health
 | Переменная | Описание |
 |------------|----------|
 | `GEMINI_API_KEY` | Обязательный ключ Gemini |
-| `GEMINI_MODEL` | Модель (по умолчанию `gemini-2.0-flash`) |
+| `GEMINI_MODEL` | Модель (по умолчанию `gemini-3.8-flash`; для новых ключей Google старые `gemini-2.x` часто недоступны) |
 | `PORT` | Порт API (по умолчанию `3001`) |
 
 Ключ **не** попадает во frontend — запросы идут только на ваш backend.

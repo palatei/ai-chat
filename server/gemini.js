@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SUPPORT_AGENT_SYSTEM_PROMPT } from './systemPrompt.js';
 
-const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 
 function getApiKey() {
   const key = process.env.GEMINI_API_KEY?.trim();

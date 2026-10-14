@@ -13,7 +13,7 @@ app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,
     geminiConfigured: Boolean(process.env.GEMINI_API_KEY?.trim()),
-    model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+    model: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
   });
 });
 
@@ -51,6 +51,14 @@ app.post('/api/chat', async (req, res) => {
         error:
           'Ключ Gemini не принят Google (API_KEY_INVALID). Нужен ключ из Google AI Studio, ' +
           'не токен Cursor (crsr_…). Обновите GEMINI_API_KEY в .env и перезапустите npm run dev.',
+      });
+      return;
+    }
+
+    if (errText.includes('is no longer available') || errText.includes('models/')) {
+      res.status(502).json({
+        error:
+          'Модель Gemini недоступна. Задайте GEMINI_MODEL в .env (например gemini-2.5-flash или gemini-3.8-flash) и перезапустите npm run dev.',
       });
       return;
     }
