@@ -56,7 +56,8 @@ export function ChatWidget() {
             <ChatBackground3D />
             <div className={styles.messagesInner}>
               <p className={styles.chatDisclaimer}>
-                Ответы генерирует ИИ-ассистент на базе Gemini через backend приложения.
+                Ассистент отвечает только на вопросы по заказам, доставке, оплате и товарам магазина
+                (Gemini на backend).
               </p>
               {messages.map((msg) => (
                 <MessageBubble

@@ -16,7 +16,7 @@ export default function App() {
           </p>
           <ul className={styles.features}>
             <li>История диалога с мок-данными</li>
-            <li>Ответы ассистента через Gemini API на backend</li>
+            <li>Ответы через Gemini — только по темам магазина (заказы, доставка, возврат)</li>
             <li>Светлая / тёмная тема</li>
           </ul>
         </header>
