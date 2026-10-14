@@ -55,3 +55,22 @@ curl -s http://localhost:3001/api/health
 | `PORT` | Порт API (по умолчанию `3001`) |
 
 Ключ **не** попадает во frontend — запросы идут только на ваш backend.
+
+## Деплой на Vercel
+
+1. Импортируйте репозиторий [palatei/ai-chat](https://github.com/palatei/ai-chat) на [vercel.com/new](https://vercel.com/new) (Framework Preset: **Vite** подхватится из `vercel.json`).
+
+2. В **Settings → Environment Variables** добавьте:
+   - `GEMINI_API_KEY` — ключ из Google AI Studio
+   - опционально `GEMINI_MODEL` = `gemini-3.8-flash`
+
+3. Deploy. Frontend — статика из `dist`, API — serverless `api/index.js` (`/api/chat`, `/api/transcribe`, `/api/health`).
+
+CLI (если установлен [Vercel CLI](https://vercel.com/docs/cli)):
+
+```bash
+npx vercel login
+npx vercel --prod
+```
+
+После деплоя проверьте: `https://ВАШ-ДОМЕН.vercel.app/api/health` → `"geminiConfigured": true`.
