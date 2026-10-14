@@ -64,4 +64,9 @@ app.post('/api/chat', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Chat API listening on http://localhost:${PORT}`);
+  if (!process.env.GEMINI_API_KEY?.trim()) {
+    console.warn(
+      '[api] GEMINI_API_KEY не задан — чат вернёт 503. Создайте .env рядом с package.json (см. .env.example).',
+    );
+  }
 });

@@ -18,6 +18,8 @@ GEMINI_API_KEY=AIza...   # https://aistudio.google.com/apikey
 
 Если в чате «не настроен ключ API» — backend не видит переменную: проверьте `.env` и что запущен именно `npm run dev` (поднимает и API на :3001, и Vite).
 
+**Монорепозиторий:** файл `.env` должен лежать в **той же папке**, где `package.json` этого чата (например `fitnapp/ai-chat/.env`), а `npm run dev` нужно запускать из неё, не из корня монорепы.
+
 2. Установите зависимости и запустите frontend + API:
 
 ```bash
