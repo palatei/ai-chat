@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSpeechRecognition } from '../../hooks/useSpeechRecognition.js';
+import { useVoiceInput } from '../../hooks/useVoiceInput.js';
 import { IconAttach, IconMic, IconSend } from './icons.jsx';
 import styles from './ChatWidget.module.css';
 
@@ -24,13 +24,13 @@ export function ChatInput({ onSend, disabled }) {
   }, []);
 
   const {
-    isSupported,
     isListening,
+    isProcessing,
     error: voiceError,
     toggleListening,
     stopListening,
     clearError,
-  } = useSpeechRecognition({
+  } = useVoiceInput({
     lang: 'ru-RU',
     onFinalTranscript: appendFinalText,
     onInterimTranscript: showInterim,
@@ -63,13 +63,17 @@ export function ChatInput({ onSend, disabled }) {
 
   const onVoiceClick = () => {
     clearError();
-    if (!isListening) {
+    if (!isListening && !isProcessing) {
       committedRef.current = value;
     }
     toggleListening();
   };
 
-  const placeholder = isListening ? 'Слушаю… говорите' : 'Напишите или скажите сообщение…';
+  let placeholder = 'Напишите или скажите сообщение…';
+  if (isProcessing) placeholder = 'Распознаю речь…';
+  else if (isListening) placeholder = 'Слушаю… говорите';
+
+  const voiceActive = isListening || isProcessing;
 
   return (
     <div className={styles.inputArea}>
@@ -82,19 +86,19 @@ export function ChatInput({ onSend, disabled }) {
       >
         <IconAttach />
       </button>
-      {isSupported && (
-        <button
-          type="button"
-          className={`${styles.voiceBtn} ${isListening ? styles.voiceBtnActive : ''}`}
-          onClick={onVoiceClick}
-          disabled={disabled}
-          aria-label={isListening ? 'Остановить запись' : 'Голосовой ввод'}
-          aria-pressed={isListening}
-          title={isListening ? 'Остановить' : 'Голосовой ввод'}
-        >
-          <IconMic />
-        </button>
-      )}
+      <button
+        type="button"
+        className={`${styles.voiceBtn} ${voiceActive ? styles.voiceBtnActive : ''}`}
+        onClick={onVoiceClick}
+        disabled={disabled || isProcessing}
+        aria-label={
+          isProcessing ? 'Распознавание' : isListening ? 'Остановить запись' : 'Голосовой ввод'
+        }
+        aria-pressed={voiceActive}
+        title={isListening ? 'Остановить' : 'Голосовой ввод'}
+      >
+        <IconMic />
+      </button>
       <div className={styles.inputFieldWrap}>
         <textarea
           className={styles.textInput}
@@ -106,7 +110,7 @@ export function ChatInput({ onSend, disabled }) {
             committedRef.current = e.target.value;
           }}
           onKeyDown={onKeyDown}
-          disabled={disabled}
+          disabled={disabled || isProcessing}
           aria-label="Текст сообщения"
         />
         {voiceError && (
@@ -119,7 +123,7 @@ export function ChatInput({ onSend, disabled }) {
         type="button"
         className={styles.sendBtn}
         onClick={submit}
-        disabled={disabled || !value.trim()}
+        disabled={disabled || !value.trim() || isProcessing}
         aria-label="Отправить"
       >
         <IconSend />

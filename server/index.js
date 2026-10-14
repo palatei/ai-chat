@@ -2,7 +2,7 @@ import path from 'node:path';
 import './loadEnv.js';
 import cors from 'cors';
 import express from 'express';
-import { generateSupportReply } from './gemini.js';
+import { generateSupportReply, transcribeSpeechAudio } from './gemini.js';
 import { getEnvDiagnostics } from './loadEnv.js';
 
 const PORT = Number(process.env.PORT || 3001);
@@ -73,6 +73,30 @@ app.post('/api/chat', async (req, res) => {
     res.status(502).json({
       error: 'Не удалось получить ответ от ассистента. Попробуйте ещё раз через несколько секунд.',
     });
+  }
+});
+
+app.post('/api/transcribe', express.json({ limit: '8mb' }), async (req, res) => {
+  try {
+    const { audioBase64, mimeType } = req.body ?? {};
+    if (typeof audioBase64 !== 'string' || !audioBase64.trim()) {
+      res.status(400).json({ error: 'audioBase64 is required' });
+      return;
+    }
+
+    const text = await transcribeSpeechAudio({
+      base64: audioBase64.trim(),
+      mimeType: typeof mimeType === 'string' ? mimeType : 'audio/webm',
+    });
+
+    res.json({ text });
+  } catch (err) {
+    if (err.code === 'MISSING_API_KEY') {
+      res.status(503).json({ error: 'Не настроен GEMINI_API_KEY для распознавания речи.' });
+      return;
+    }
+    console.error('[transcribe]', err);
+    res.status(502).json({ error: 'Не удалось распознать аудио. Попробуйте ещё раз.' });
   }
 });
 

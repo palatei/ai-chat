@@ -52,3 +52,31 @@ export async function generateSupportReply(messages) {
 
   return text;
 }
+
+/**
+ * @param {{ base64: string, mimeType: string }} audio
+ */
+export async function transcribeSpeechAudio({ base64, mimeType }) {
+  if (!base64?.trim()) {
+    throw new Error('audio payload is empty');
+  }
+
+  const genAI = new GoogleGenerativeAI(getApiKey());
+  const model = genAI.getGenerativeModel({ model: DEFAULT_MODEL });
+
+  const result = await model.generateContent([
+    {
+      text:
+        'Распознай речь на приложенном аудио. Верни только текст на русском языке, без кавычек и пояснений. ' +
+        'Если речи нет или не слышно — верни пустую строку.',
+    },
+    {
+      inlineData: {
+        data: base64,
+        mimeType: mimeType || 'audio/webm',
+      },
+    },
+  ]);
+
+  return result.response.text()?.trim() ?? '';
+}
