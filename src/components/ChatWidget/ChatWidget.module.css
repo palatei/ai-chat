@@ -279,8 +279,16 @@
   border-top: 1px solid var(--border);
 }
 
-.textInput {
+.inputFieldWrap {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.textInput {
+  width: 100%;
   min-height: 40px;
   max-height: 120px;
   resize: none;
@@ -312,6 +320,56 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.voiceBtn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.voiceBtn:hover:not(:disabled) {
+  color: var(--jivo-green);
+  background: var(--jivo-green-muted);
+}
+
+.voiceBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.voiceBtnActive {
+  color: #fff;
+  background: #e53935;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.25);
+  animation: voicePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes voicePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.voiceError {
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  color: #c62828;
+  padding: 0 4px;
 }
 
 .sendBtn {
