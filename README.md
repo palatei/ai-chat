@@ -4,12 +4,19 @@ React + Vite, демо-страница с плавающим виджетом �
 
 ## Запуск
 
-1. Скопируйте `.env.example` в `.env` и укажите ключ:
+1. Скопируйте `.env.example` в `.env` и укажите **ключ Gemini** (не токены Cursor):
 
 ```bash
 cp .env.example .env
-# GEMINI_API_KEY=ваш_ключ из https://aistudio.google.com/apikey
 ```
+
+В `.env`:
+
+```env
+GEMINI_API_KEY=AIza...   # https://aistudio.google.com/apikey
+```
+
+Если в чате «не настроен ключ API» — backend не видит переменную: проверьте `.env` и что запущен именно `npm run dev` (поднимает и API на :3001, и Vite).
 
 2. Установите зависимости и запустите frontend + API:
 

@@ -37,7 +37,21 @@ app.post('/api/chat', async (req, res) => {
     res.json({ reply });
   } catch (err) {
     if (err.code === 'MISSING_API_KEY') {
-      res.status(503).json({ error: 'Сервис ИИ временно недоступен: не настроен ключ API.' });
+      res.status(503).json({
+        error:
+          'Не настроен GEMINI_API_KEY. Создайте файл .env в корне проекта (см. .env.example), ' +
+          'добавьте ключ из Google AI Studio (https://aistudio.google.com/apikey) и перезапустите npm run dev.',
+      });
+      return;
+    }
+
+    const errText = String(err?.message || err);
+    if (errText.includes('API_KEY_INVALID')) {
+      res.status(503).json({
+        error:
+          'Ключ Gemini не принят Google (API_KEY_INVALID). Нужен ключ из Google AI Studio, ' +
+          'не токен Cursor (crsr_…). Обновите GEMINI_API_KEY в .env и перезапустите npm run dev.',
+      });
       return;
     }
 
