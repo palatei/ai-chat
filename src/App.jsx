@@ -16,7 +16,7 @@ export default function App() {
           </p>
           <ul className={styles.features}>
             <li>История диалога с мок-данными</li>
-            <li>Индикатор «печатает…» и ответы по ключевым фразам</li>
+            <li>Ответы ассистента через Gemini API на backend</li>
             <li>Светлая / тёмная тема</li>
           </ul>
         </header>

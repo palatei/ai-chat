@@ -1,42 +1,21 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { mockAgentReplies, mockInitialMessages } from '../mocks/messages.js';
+import { requestChatReply } from '../api/chatClient.js';
+import { mockInitialMessages } from '../mocks/messages.js';
 
 function createId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function findReply(text) {
-  const normalized = text.trim().toLowerCase();
-  for (const [key, reply] of Object.entries(mockAgentReplies)) {
-    if (key !== 'default' && normalized.includes(key)) {
-      return reply;
-    }
-  }
-  return mockAgentReplies.default;
-}
-
-const TYPING_DELAY_MS = 900;
-const REPLY_DELAY_MS = 1400;
-
 export function useChat() {
   const [messages, setMessages] = useState(mockInitialMessages);
   const [isTyping, setIsTyping] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const timerRef = useRef(null);
-
-  const clearPending = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
+  const requestIdRef = useRef(0);
 
   const sendMessage = useCallback(
-    (text, { markRead = true } = {}) => {
+    async (text, { markRead = true } = {}) => {
       const trimmed = text.trim();
-      if (!trimmed) return;
-
-      clearPending();
+      if (!trimmed || isTyping) return;
 
       const userMessage = {
         id: createId('user'),
@@ -55,23 +34,53 @@ export function useChat() {
       }, 400);
 
       setIsTyping(true);
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
 
-      timerRef.current = setTimeout(() => {
+      try {
+        const historyForApi = [...messages, userMessage]
+          .filter((m) => m.role === 'user' || m.role === 'assistant')
+          .map((m) => ({ role: m.role, text: m.text }));
+
+        const replyText = await requestChatReply(historyForApi);
+
+        if (requestIdRef.current !== requestId) return;
+
         const assistantMessage = {
           id: createId('assistant'),
           role: 'assistant',
-          text: findReply(trimmed),
+          text: replyText,
           createdAt: new Date().toISOString(),
           status: 'read',
         };
         setMessages((prev) => [...prev, assistantMessage]);
-        setIsTyping(false);
         if (!markRead) {
           setUnreadCount((c) => c + 1);
         }
-      }, REPLY_DELAY_MS + TYPING_DELAY_MS);
+      } catch (err) {
+        if (requestIdRef.current !== requestId) return;
+
+        const assistantMessage = {
+          id: createId('assistant'),
+          role: 'assistant',
+          text:
+            err instanceof Error
+              ? err.message
+              : 'Произошла ошибка при отправке сообщения. Попробуйте ещё раз.',
+          createdAt: new Date().toISOString(),
+          status: 'read',
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        if (!markRead) {
+          setUnreadCount((c) => c + 1);
+        }
+      } finally {
+        if (requestIdRef.current === requestId) {
+          setIsTyping(false);
+        }
+      }
     },
-    [clearPending],
+    [isTyping, messages],
   );
 
   const markAllRead = useCallback(() => {

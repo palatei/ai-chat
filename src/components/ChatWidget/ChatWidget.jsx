@@ -56,7 +56,7 @@ export function ChatWidget() {
             <ChatBackground3D />
             <div className={styles.messagesInner}>
               <p className={styles.chatDisclaimer}>
-                Ответы генерируются автоматически (демо). Для продакшена подключите API агента.
+                Ответы генерирует ИИ-ассистент на базе Gemini через backend приложения.
               </p>
               {messages.map((msg) => (
                 <MessageBubble
@@ -76,7 +76,7 @@ export function ChatWidget() {
             />
           )}
           <ChatInput onSend={handleSend} disabled={isTyping} />
-          <footer className={styles.poweredBy}>Работает на ИИ · демо-режим</footer>
+          <footer className={styles.poweredBy}>Powered by Gemini</footer>
         </section>
       )}
 
