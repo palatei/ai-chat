@@ -36,6 +36,8 @@ npm run dev
 curl -s http://localhost:3001/api/health
 ```
 
+В ответе смотрите `envFileExists` и `projectRoot`: если `envFileExists: false`, `.env` лежит не там, откуда читает API (файл должен быть в `projectRoot`).
+
 ## Структура
 
 - `src/components/ChatWidget/` — UI виджета

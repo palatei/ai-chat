@@ -1,7 +1,9 @@
-import 'dotenv/config';
+import path from 'node:path';
+import './loadEnv.js';
 import cors from 'cors';
 import express from 'express';
 import { generateSupportReply } from './gemini.js';
+import { getEnvDiagnostics } from './loadEnv.js';
 
 const PORT = Number(process.env.PORT || 3001);
 
@@ -10,10 +12,14 @@ app.use(cors({ origin: true }));
 app.use(express.json({ limit: '256kb' }));
 
 app.get('/api/health', (_req, res) => {
+  const env = getEnvDiagnostics();
   res.json({
     ok: true,
-    geminiConfigured: Boolean(process.env.GEMINI_API_KEY?.trim()),
+    geminiConfigured: env.geminiConfigured,
     model: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
+    envFileExists: env.envFileExists,
+    projectRoot: env.projectRoot,
+    cwd: env.cwd,
   });
 });
 
@@ -72,9 +78,10 @@ app.post('/api/chat', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Chat API listening on http://localhost:${PORT}`);
-  if (!process.env.GEMINI_API_KEY?.trim()) {
+  const env = getEnvDiagnostics();
+  if (!env.geminiConfigured) {
     console.warn(
-      '[api] GEMINI_API_KEY не задан — чат вернёт 503. Создайте .env рядом с package.json (см. .env.example).',
+      `[api] GEMINI_API_KEY не задан — чат вернёт 503. Ожидаемый .env: ${path.join(env.projectRoot, '.env')} (файл ${env.envFileExists ? 'найден, проверьте GEMINI_API_KEY=' : 'не найден'})`,
     );
   }
 });
