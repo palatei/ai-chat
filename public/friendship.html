@@ -2,11 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="theme-color" content="#2a2118" />
     <title>Friendship</title>
     <style>
       :root {
-        --bg: #cfc6b8;
         --slide: #f4eee6;
         --card: #fffbf6;
         --ink: #2a2118;
@@ -14,12 +20,12 @@
         --line: #d8cfc3;
         --accent: #b45332;
         --gold: #c9a15b;
-        --sage: #4f6f57;
         --title: #2a2118;
         --title-mute: #d8cfc3;
+        --nav: #2a2118;
+        --nav-ink: #f4eee6;
       }
       [data-theme="dark"] {
-        --bg: #0d0b09;
         --slide: #1a1612;
         --card: #241f1a;
         --ink: #f6efe6;
@@ -27,151 +33,116 @@
         --line: #3a322a;
         --accent: #e0a06a;
         --gold: #c9a15b;
-        --sage: #8faf96;
         --title: #14110e;
         --title-mute: #c9b9a8;
+        --nav: #0d0b09;
+        --nav-ink: #f6efe6;
       }
-      * { box-sizing: border-box; }
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       html, body {
         margin: 0;
         height: 100%;
-        background: var(--bg);
+        background: var(--slide);
         color: var(--ink);
-        font-family: Calibri, "Segoe UI", "Source Sans 3", sans-serif;
-      }
-      body {
-        display: grid;
-        place-items: center;
-        padding: 20px 20px 72px;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        overflow: hidden;
+        touch-action: pan-y;
       }
       .stage {
-        width: min(96vw, calc((100vh - 110px) * 16 / 9));
-        aspect-ratio: 16 / 9;
-        background: var(--slide);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 18px 50px rgba(42, 33, 24, 0.22);
-      }
-      .bar {
-        position: absolute;
-        left: 0;
+        position: fixed;
         top: 0;
-        width: 10px;
-        height: 100%;
-        background: var(--accent);
+        left: 0;
+        right: 0;
+        bottom: calc(76px + env(safe-area-inset-bottom));
+        background: var(--slide);
+        overflow: hidden;
       }
       .slide {
         display: none;
         position: absolute;
         inset: 0;
-        padding: 42px 56px 48px 64px;
+        padding: 22px 18px 18px 22px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .slide.on { display: block; }
       .slide.title, .slide.close {
         background: var(--title);
         color: #fff;
       }
+      .bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 8px;
+        height: 100%;
+        background: var(--accent);
+      }
       .slide.title .bar, .slide.close .bar { background: var(--gold); }
       .kicker {
         margin: 0 0 8px;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 700;
-        letter-spacing: 0.28em;
+        letter-spacing: 0.22em;
         color: var(--accent);
         text-transform: uppercase;
       }
       .slide.title .kicker, .slide.close .kicker { color: var(--gold); }
       h1 {
         margin: 0;
-        font-weight: 300;
-        font-size: clamp(52px, 8vw, 84px);
+        font-weight: 500;
+        font-size: clamp(42px, 12vw, 72px);
         line-height: 0.95;
       }
       h2 {
-        margin: 0 0 22px;
-        font-weight: 300;
-        font-size: clamp(28px, 3.4vw, 40px);
+        margin: 0 0 14px;
+        font-weight: 500;
+        font-size: clamp(24px, 6.4vw, 36px);
+        line-height: 1.15;
       }
+      h3 { margin: 0 0 6px; font-size: 17px; }
       .lede {
-        margin: 18px 0 0;
-        font-size: 22px;
+        margin: 16px 0 0;
+        font-size: 18px;
         color: var(--title-mute);
-        max-width: 18em;
+        max-width: 22em;
       }
-      .meta {
-        position: absolute;
-        left: 64px;
-        bottom: 36px;
-        color: var(--gold);
+      .meta { margin-top: 28px; color: var(--gold); font-size: 15px; }
+      .intro { margin: 0 0 14px; color: var(--mute); font-size: 16px; line-height: 1.45; }
+      .agenda, .kinds, .practice { list-style: none; margin: 0; padding: 0; }
+      .agenda li, .kinds li {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 8px;
+        padding: 11px 0;
+        border-bottom: 1px solid var(--line);
         font-size: 16px;
       }
-      .agenda {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-      .agenda li {
-        display: grid;
-        grid-template-columns: 52px 1fr;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--line);
-        font-size: 24px;
-      }
-      .agenda b { color: var(--accent); }
-      .cards3, .cards6, .quotes {
-        display: grid;
-        gap: 16px;
-      }
-      .cards3 { grid-template-columns: 1fr 1fr 1fr; }
-      .cards6 { grid-template-columns: 1fr 1fr 1fr; }
-      .quotes { grid-template-columns: 1fr 1fr; }
-      .card, .quote, .row {
+      .kinds li { grid-template-columns: 1fr; gap: 4px; }
+      .agenda b, .kinds b { color: var(--accent); }
+      .cards3, .cards6, .quotes, .rows, .steps { display: grid; gap: 10px; }
+      .card, .quote, .row, .steps article {
         background: var(--card);
-        padding: 18px 20px;
+        padding: 14px;
       }
-      .card h3, .quote cite, .row strong { margin: 0 0 8px; }
-      .card p, .quote p, .row p, .intro {
+      .card p, .quote p, .row p, .kinds p, .practice p, .steps p {
         margin: 0;
         color: var(--mute);
-        line-height: 1.45;
+        line-height: 1.4;
+        font-size: 15px;
       }
-      .intro { font-size: 20px; margin: 0 0 22px; max-width: 42em; }
-      .rows { display: grid; gap: 12px; }
-      .row {
+      .row strong { color: var(--accent); display: block; margin-bottom: 4px; }
+      .quote p { font-style: italic; color: var(--ink); margin-bottom: 8px; }
+      .quote cite { color: var(--accent); font-style: normal; font-weight: 700; }
+      .practice li {
         display: grid;
-        grid-template-columns: 160px 1fr;
-        align-items: center;
-        gap: 16px;
-        min-height: 68px;
-      }
-      .row strong { color: var(--accent); font-size: 20px; }
-      .kinds li {
-        display: grid;
-        grid-template-columns: 220px 1fr;
-        gap: 18px;
-        padding: 9px 0;
-        align-items: center;
-        list-style: none;
-      }
-      .kinds { margin: 0; padding: 0; }
-      .kinds b { font-size: 18px; }
-      .steps {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 12px;
-        height: calc(100% - 90px);
-      }
-      .steps article {
-        background: var(--card);
-        padding: 22px 14px;
-        text-align: center;
+        grid-template-columns: 36px 1fr;
+        gap: 10px;
+        margin: 0 0 12px;
       }
       .num {
-        width: 42px;
-        height: 42px;
-        margin: 0 auto 12px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background: var(--ink);
         color: #fff;
@@ -179,84 +150,66 @@
         place-items: center;
         font-weight: 700;
       }
-      .practice li {
-        display: grid;
-        grid-template-columns: 44px 1fr;
-        gap: 14px;
-        list-style: none;
-        margin: 0 0 16px;
-        align-items: start;
-      }
-      .practice { margin: 0; padding: 0; }
-      .quote p { font-style: italic; font-size: 17px; color: var(--ink); margin-bottom: 12px; }
-      .quote cite { color: var(--accent); font-style: normal; font-weight: 700; }
-      .foot {
-        position: absolute;
-        left: 64px;
-        right: 48px;
-        bottom: 16px;
-        display: flex;
-        justify-content: space-between;
-        color: var(--mute);
-        font-size: 13px;
+      .hint {
+        margin: 28px 0 0;
+        color: var(--gold);
+        font-size: 14px;
       }
       .nav {
         position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        height: 56px;
-        display: flex;
+        min-height: 76px;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        justify-content: center;
-        gap: 16px;
-        background: #2a2118;
-        color: #f4eee6;
+        gap: 8px;
+        background: var(--nav);
+        color: var(--nav-ink);
+        z-index: 5;
       }
       .nav button {
-        background: transparent;
-        color: inherit;
+        min-height: 48px;
         border: 0;
+        border-radius: 12px;
+        background: #3d342b;
+        color: inherit;
         font: inherit;
-        cursor: pointer;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .nav button:disabled { opacity: 0.35; }
+      #next { background: #b45332; }
+      .mid { text-align: center; font-size: 14px; }
+      .mid button {
+        background: transparent;
+        min-height: 32px;
         font-size: 13px;
-        padding: 8px 10px;
+        font-weight: 600;
       }
-      .nav button:disabled { opacity: 0.35; cursor: default; }
-      .dots { display: flex; gap: 7px; }
-      .dots button {
-        width: 8px;
-        height: 8px;
-        padding: 0;
-        border-radius: 50%;
-        background: #8a7d70;
-      }
-      .dots button.on {
-        background: #c9a15b;
-        width: 20px;
-        border-radius: 99px;
-      }
-      @media (max-width: 800px) {
-        .cards3, .cards6, .quotes, .steps, .row, .kinds li {
-          grid-template-columns: 1fr;
-        }
-        .slide { padding: 28px 22px 40px 28px; }
+      @media (orientation: landscape) and (min-width: 700px) {
+        .cards3, .cards6 { grid-template-columns: 1fr 1fr 1fr; }
+        .quotes, .rows { grid-template-columns: 1fr 1fr; }
+        .steps { grid-template-columns: repeat(5, 1fr); }
+        .kinds li { grid-template-columns: 180px 1fr; align-items: start; }
+        .slide { padding: 22px 28px 18px 32px; }
       }
     </style>
   </head>
   <body>
     <div class="stage" id="stage">
-      <section class="slide title on" data-n="1">
+      <section class="slide title on">
         <div class="bar"></div>
         <p class="kicker">A short talk</p>
         <h1>Friendship</h1>
         <p class="lede">The people who make ordinary days easier to carry.</p>
         <p class="meta">English · 10 slides</p>
+        <p class="hint">Swipe left or tap Next.</p>
       </section>
 
-      <section class="slide" data-n="2">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Agenda</p>
         <h2>What we will cover</h2>
@@ -269,10 +222,9 @@
           <li><b>06</b> Words worth keeping</li>
           <li><b>07</b> Simple habits you can start</li>
         </ol>
-        <div class="foot"><span>FRIENDSHIP</span><span>2 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="3">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Definition</p>
         <h2>What is friendship?</h2>
@@ -282,10 +234,9 @@
           <article class="card"><h3>Mutual</h3><p>Both people give time, honesty, and care.</p></article>
           <article class="card"><h3>Everyday</h3><p>It lives in walks, messages, and shared silence.</p></article>
         </div>
-        <div class="foot"><span>FRIENDSHIP</span><span>3 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="4">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Why it matters</p>
         <h2>A life is lighter with witnesses</h2>
@@ -295,10 +246,9 @@
           <div class="row"><strong>Courage</strong><p>Someone who believes in us makes hard choices easier to try.</p></div>
           <div class="row"><strong>Joy</strong><p>Good news needs a person who will be glad without competing.</p></div>
         </div>
-        <div class="foot"><span>FRIENDSHIP</span><span>4 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="5">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Qualities</p>
         <h2>What a good friend does</h2>
@@ -310,10 +260,9 @@
           <article class="card"><h3>Humor</h3><p>Makes the hard day shorter.</p></article>
           <article class="card"><h3>Repair</h3><p>Comes back after a mistake and talks.</p></article>
         </div>
-        <div class="foot"><span>FRIENDSHIP</span><span>5 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="6">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Kinds</p>
         <h2>Friends wear different weather</h2>
@@ -325,10 +274,9 @@
           <li><b>The distant friend</b><p>Another city. Voice notes and rare visits still count.</p></li>
           <li><b>The new friend</b><p>New does not mean thin. Some bonds start fast and stay.</p></li>
         </ul>
-        <div class="foot"><span>FRIENDSHIP</span><span>6 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="7">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Process</p>
         <h2>How a friendship is built</h2>
@@ -339,10 +287,9 @@
           <article><div class="num">4</div><h3>Weather</h3><p>The first hard season: a fight, a move, illness.</p></article>
           <article><div class="num">5</div><h3>Keep</h3><p>You repair. You return. That is the secret.</p></article>
         </div>
-        <div class="foot"><span>FRIENDSHIP</span><span>7 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="8">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Quotes</p>
         <h2>People who said it in fewer words</h2>
@@ -352,10 +299,9 @@
           <article class="quote"><p>“A friend may be waiting behind a stranger’s face.”</p><cite>Maya Angelou</cite></article>
           <article class="quote"><p>“Friendship is born at that moment when one person says to another: What! You too?”</p><cite>C. S. Lewis</cite></article>
         </div>
-        <div class="foot"><span>FRIENDSHIP</span><span>8 / 10</span></div>
       </section>
 
-      <section class="slide" data-n="9">
+      <section class="slide">
         <div class="bar"></div>
         <p class="kicker">Practice</p>
         <h2>Four things you can do this week</h2>
@@ -365,62 +311,62 @@
           <li><div class="num">3</div><div><h3>Repair a small tear</h3><p>The late text. The late apology. Still better than silence.</p></div></li>
           <li><div class="num">4</div><div><h3>Protect one recurring hour</h3><p>A monthly call or a Sunday walk outlasts moods.</p></div></li>
         </ol>
-        <div class="foot"><span>FRIENDSHIP</span><span>9 / 10</span></div>
       </section>
 
-      <section class="slide close" data-n="10">
+      <section class="slide close">
         <div class="bar"></div>
         <p class="kicker">Thank you</p>
-        <h1>Keep a seat empty<br />on purpose.</h1>
+        <h1>Keep a seat empty on purpose.</h1>
         <p class="lede">The best friendships are not collected. They are tended.</p>
       </section>
     </div>
 
-    <nav class="nav" aria-label="Slides">
-      <button type="button" id="prev">Previous</button>
-      <div class="dots" id="dots"></div>
-      <span id="count">1 / 10</span>
+    <nav class="nav">
+      <button type="button" id="prev">Back</button>
+      <div class="mid">
+        <div id="count">1 / 10</div>
+        <button type="button" id="theme">Dark</button>
+      </div>
       <button type="button" id="next">Next</button>
-      <button type="button" id="full">Fullscreen</button>
-      <button type="button" id="theme">Dark</button>
     </nav>
 
     <script>
       const slides = [...document.querySelectorAll(".slide")];
-      const dots = document.getElementById("dots");
       const count = document.getElementById("count");
       const prev = document.getElementById("prev");
       const next = document.getElementById("next");
       let i = 0;
-
-      slides.forEach((_, n) => {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.setAttribute("aria-label", "Slide " + (n + 1));
-        b.addEventListener("click", () => go(n));
-        dots.appendChild(b);
-      });
+      let startX = 0;
 
       function go(n) {
         i = Math.max(0, Math.min(slides.length - 1, n));
         slides.forEach((s, idx) => s.classList.toggle("on", idx === i));
-        [...dots.children].forEach((d, idx) => d.classList.toggle("on", idx === i));
         count.textContent = i + 1 + " / " + slides.length;
         prev.disabled = i === 0;
         next.disabled = i === slides.length - 1;
+        if (navigator.wakeLock) {
+          navigator.wakeLock.request("screen").catch(() => {});
+        }
       }
 
       prev.onclick = () => go(i - 1);
       next.onclick = () => go(i + 1);
-      document.getElementById("full").onclick = () => {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-        else document.exitFullscreen();
-      };
       document.getElementById("theme").onclick = () => {
         const dark = document.documentElement.getAttribute("data-theme") === "dark";
         document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
         document.getElementById("theme").textContent = dark ? "Dark" : "Light";
       };
+
+      const stage = document.getElementById("stage");
+      stage.addEventListener("touchstart", (e) => {
+        startX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      stage.addEventListener("touchend", (e) => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (dx < -50) go(i + 1);
+        if (dx > 50) go(i - 1);
+      }, { passive: true });
+
       window.addEventListener("keydown", (e) => {
         if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) {
           e.preventDefault();
@@ -429,12 +375,6 @@
         if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) {
           e.preventDefault();
           go(i - 1);
-        }
-        if (e.key === "Home") go(0);
-        if (e.key === "End") go(slides.length - 1);
-        if (e.key === "f" || e.key === "F5") {
-          e.preventDefault();
-          document.documentElement.requestFullscreen();
         }
       });
       go(0);
