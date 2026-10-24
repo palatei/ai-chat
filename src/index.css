@@ -5,20 +5,10 @@
 }
 
 :root {
-  --friend-bg: #f4ece1;
-  --friend-surface: rgba(255, 250, 244, 0.72);
-  --friend-ink: #2a2118;
-  --friend-mute: #5c5146;
-  --friend-soft: #8a7d70;
-  --friend-line: rgba(42, 33, 24, 0.12);
-  --friend-line-strong: rgba(42, 33, 24, 0.22);
-  --friend-accent: #b45332;
-  --friend-glow-a: rgba(196, 92, 62, 0.16);
-  --friend-glow-b: rgba(201, 161, 91, 0.18);
   --jivo-green: #2dbe60;
   --jivo-green-hover: #26a854;
   --jivo-green-muted: rgba(45, 190, 96, 0.12);
-  font-family: 'Source Sans 3', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -41,16 +31,6 @@
   --bubble-agent: #f0f2f5;
   --bubble-agent-text: #1a1d26;
   --header-gradient: linear-gradient(135deg, #2dbe60 0%, #24a352 100%);
-  --friend-bg: #f4ece1;
-  --friend-surface: rgba(255, 250, 244, 0.72);
-  --friend-ink: #2a2118;
-  --friend-mute: #5c5146;
-  --friend-soft: #8a7d70;
-  --friend-line: rgba(42, 33, 24, 0.12);
-  --friend-line-strong: rgba(42, 33, 24, 0.22);
-  --friend-accent: #b45332;
-  --friend-glow-a: rgba(196, 92, 62, 0.16);
-  --friend-glow-b: rgba(201, 161, 91, 0.18);
 }
 
 [data-theme='dark'] {
@@ -68,16 +48,6 @@
   --bubble-agent: #242f3f;
   --bubble-agent-text: #f3f4f6;
   --header-gradient: linear-gradient(135deg, #2a9d52 0%, #1e7a3f 100%);
-  --friend-bg: #14110e;
-  --friend-surface: rgba(36, 28, 22, 0.82);
-  --friend-ink: #f6efe6;
-  --friend-mute: #c9b9a8;
-  --friend-soft: #8f8274;
-  --friend-line: rgba(246, 239, 230, 0.12);
-  --friend-line-strong: rgba(246, 239, 230, 0.28);
-  --friend-accent: #e0a06a;
-  --friend-glow-a: rgba(196, 92, 62, 0.2);
-  --friend-glow-b: rgba(122, 92, 138, 0.18);
 }
 
 html,
